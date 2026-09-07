@@ -63,11 +63,27 @@ composer install
 
 ### 4. Migrations e seed
 
+**Opcao A — Terminal (SSH/CLI):**
+
 ```bash
-php database/migrate.php          # cria as tabelas
+php database/migrate.php          # cria as tabelas (executa database/schema.sql)
 php database/seed.php             # dados iniciais + Super Admin
 php database/seed.php --demo      # (dev) inclui dados de demonstracao
 ```
+
+**Opcao B — Instalador web (hospedagem sem SSH):**
+
+Acesse no navegador: `https://SEU_DOMINIO/install.php`. O assistente testa a conexao,
+cria as tabelas e popula os dados iniciais (voce informa o e-mail e a senha do Super Admin).
+Ao terminar, clique em **Apagar install.php** — o proprio instalador se remove por seguranca.
+
+**Opcao C — Importar o SQL manualmente (phpMyAdmin ou mysql):**
+
+```bash
+mysql -u USUARIO -p lowticket_saas < database/schema.sql
+```
+Depois rode o seed (Opcao A ou B) para criar o Super Admin e os produtos. Somente
+importar o SQL cria as tabelas vazias, sem login administrativo nem produtos.
 
 O seed cria um **Super Admin** padrao
 
