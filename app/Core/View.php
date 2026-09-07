@@ -35,7 +35,14 @@ class View
         while ($this->layout !== null) {
             $layout = $this->layout;
             $this->layout = null;
-            $this->sections['content'] = $content;
+            // Se a view nao definiu explicitamente a secao 'content' via start/stop,
+            // usa o conteudo "solto" renderizado como content. Caso contrario,
+            // preserva a secao ja capturada (nao sobrescreve com o buffer vazio).
+            if (!array_key_exists('content', $this->sections) || trim($this->sections['content']) === '') {
+                if (trim($content) !== '') {
+                    $this->sections['content'] = $content;
+                }
+            }
             $content = $this->renderTemplate($layout, $data);
         }
 
