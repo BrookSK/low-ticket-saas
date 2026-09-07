@@ -49,18 +49,21 @@ class View
         return new Response($content);
     }
 
-    protected function renderTemplate(string $template, array $data): string
+    protected function renderTemplate(string $__ltsaas_template, array $__ltsaas_data): string
     {
-        $file = $this->viewPath . DIRECTORY_SEPARATOR . str_replace('.', DIRECTORY_SEPARATOR, $template) . '.php';
-        if (!is_file($file)) {
-            throw new RuntimeException("View nao encontrada: {$template} ({$file})");
+        // Nomes internos com prefixo para nao colidir com variaveis da view
+        // (ex.: uma view que recebe $template, $data ou $file).
+        $__ltsaas_file = $this->viewPath . DIRECTORY_SEPARATOR
+            . str_replace('.', DIRECTORY_SEPARATOR, $__ltsaas_template) . '.php';
+        if (!is_file($__ltsaas_file)) {
+            throw new RuntimeException("View nao encontrada: {$__ltsaas_template} ({$__ltsaas_file})");
         }
 
-        $data = array_merge($this->shared, $data);
-        extract($data, EXTR_SKIP);
+        $__ltsaas_data = array_merge($this->shared, $__ltsaas_data);
+        extract($__ltsaas_data, EXTR_OVERWRITE);
 
         ob_start();
-        include $file;
+        include $__ltsaas_file;
         return ob_get_clean() ?: '';
     }
 

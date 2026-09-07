@@ -7,11 +7,11 @@
 $this->extend('layouts.admin');
 ?>
 <?php $this->start('content'); ?>
-<div class="grid" style="grid-template-columns:220px 1fr;gap:1.5rem;align-items:start">
+<div class="settings-layout">
     <div class="card">
-        <nav style="padding:.5rem">
+        <nav class="settings-tabs">
             <?php foreach ($schema as $g => $data): ?>
-                <a class="nav-link <?= $g === $group ? 'active' : '' ?>" style="color:<?= $g === $group ? '#fff' : 'var(--ink-2)' ?>;background:<?= $g === $group ? 'var(--brand)' : 'transparent' ?>"
+                <a class="settings-tab <?= $g === $group ? 'active' : '' ?>"
                    href="<?= url('/admin/configuracoes/' . $g) ?>"><?= e($data['label']) ?></a>
             <?php endforeach; ?>
         </nav>

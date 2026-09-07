@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Core\Database;
 use App\WhatsApp\CloudApiProvider;
+use App\WhatsApp\EvolutionProvider;
 use App\WhatsApp\NullProvider;
 use App\WhatsApp\WhatsAppProvider;
 
@@ -39,6 +40,13 @@ class WhatsAppService
                     $token,
                     (string) $this->settings->get('whatsapp.phone_number_id', ''),
                     (string) $this->settings->get('whatsapp.api_url', '')
+                )
+                : new NullProvider(),
+            'evolution' => ($token && $this->settings->get('whatsapp.api_url'))
+                ? new EvolutionProvider(
+                    (string) $this->settings->get('whatsapp.api_url', ''),
+                    $token,
+                    (string) $this->settings->get('whatsapp.phone_number_id', '')
                 )
                 : new NullProvider(),
             default => new NullProvider(),

@@ -45,7 +45,7 @@ abstract class Model
         );
     }
 
-    public static function all(string $orderBy = null): array
+    public static function all(?string $orderBy = null): array
     {
         $sql = 'SELECT * FROM ' . static::$table;
         if ($orderBy) {

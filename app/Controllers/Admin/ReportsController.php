@@ -25,6 +25,26 @@ class ReportsController extends Controller
         return $this->view('admin.reports.index', ['title' => 'Relatorios']);
     }
 
+    /**
+     * Visualiza um relatorio pelo tipo interno (sales|finance|marketing|users).
+     */
+    public function showByType(Request $request): Response
+    {
+        return match ((string) $request->param('type')) {
+            'sales' => $this->sales($request),
+            'finance' => $this->finance($request),
+            'marketing' => $this->marketing($request),
+            'users' => $this->users($request),
+            default => $this->abortNotFound(),
+        };
+    }
+
+    protected function abortNotFound(): Response
+    {
+        $this->abort(404, 'Relatorio nao encontrado.');
+        return Response::make('', 404); // nunca alcancado (abort lanca excecao)
+    }
+
     public function sales(Request $request): Response
     {
         $rows = $this->salesData($this->range($request));
@@ -103,9 +123,10 @@ class ReportsController extends Controller
     protected function csv(string $type, array $headers, array $rows): Response
     {
         $fh = fopen('php://temp', 'r+');
-        fputcsv($fh, $headers);
+        // Passa delimitador, enclosure e escape explicitos (evita deprecated no PHP 8.4+).
+        fputcsv($fh, $headers, ',', '"', '\\');
         foreach ($rows as $row) {
-            fputcsv($fh, array_values($row));
+            fputcsv($fh, array_values($row), ',', '"', '\\');
         }
         rewind($fh);
         $content = stream_get_contents($fh);

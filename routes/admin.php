@@ -98,11 +98,15 @@ $router->group(['prefix' => '/admin', 'middleware' => ['admin']], function ($rou
 
     // Relatorios (com export CSV/PDF).
     $router->get('/relatorios', ReportsController::class . '@index')->name('admin.reports');
-    $router->get('/relatorios/vendas', ReportsController::class . '@sales')->name('admin.reports.sales');
-    $router->get('/relatorios/financeiro', ReportsController::class . '@finance')->name('admin.reports.finance');
-    $router->get('/relatorios/marketing', ReportsController::class . '@marketing')->name('admin.reports.marketing');
-    $router->get('/relatorios/usuarios', ReportsController::class . '@users')->name('admin.reports.users');
+    // Aliases em portugues (compatibilidade).
+    $router->get('/relatorios/vendas', ReportsController::class . '@sales');
+    $router->get('/relatorios/financeiro', ReportsController::class . '@finance');
+    $router->get('/relatorios/marketing', ReportsController::class . '@marketing');
+    $router->get('/relatorios/usuarios', ReportsController::class . '@users');
+    // Export deve vir ANTES da rota curinga {type}.
     $router->get('/relatorios/{type}/export/{format}', ReportsController::class . '@export')->name('admin.reports.export');
+    // Visualizacao por tipo interno (sales|finance|marketing|users) usada pela view de indice.
+    $router->get('/relatorios/{type}', ReportsController::class . '@showByType')->name('admin.reports.show');
 
     // Logs.
     $router->get('/logs', LogsController::class . '@index')->name('admin.logs');

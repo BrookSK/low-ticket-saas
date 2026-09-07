@@ -75,11 +75,11 @@ class SettingsController extends Controller
             'whatsapp' => [
                 'label' => 'WhatsApp',
                 'fields' => [
-                    'whatsapp.provider' => ['Provedor', 'select', false, ['' => 'Nenhum', 'cloud_api' => 'WhatsApp Cloud API (Meta)']],
-                    'whatsapp.token' => ['Token', 'password', true],
-                    'whatsapp.phone_number' => ['Numero (E.164)', 'text', false],
-                    'whatsapp.phone_number_id' => ['Phone Number ID', 'text', false],
-                    'whatsapp.api_url' => ['API URL (opcional)', 'text', false],
+                    'whatsapp.provider' => ['Provedor', 'select', false, ['' => 'Nenhum', 'evolution' => 'Evolution API', 'cloud_api' => 'WhatsApp Cloud API (Meta)']],
+                    'whatsapp.api_url' => ['API URL (base) — ex: https://evo.seudominio.com', 'text', false, null, 'Evolution: URL base da sua instancia. Cloud API: opcional.'],
+                    'whatsapp.token' => ['Token / apikey', 'password', true, null, 'Evolution: apikey. Cloud API: token de acesso.'],
+                    'whatsapp.phone_number_id' => ['Instancia / Phone Number ID', 'text', false, null, 'Evolution: nome da instancia. Cloud API: Phone Number ID.'],
+                    'whatsapp.phone_number' => ['Numero do remetente (E.164)', 'text', false],
                     'whatsapp.webhook_verify_token' => ['Webhook Verify Token', 'password', true],
                 ],
             ],
