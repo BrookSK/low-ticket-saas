@@ -112,7 +112,7 @@ Aponte o virtual host para a **raiz do projeto** (o `index.php` da raiz delega p
 ```nginx
 server {
     listen 80;
-    server_name app.seudominio.com;
+    server_name meuorcamento.lrvweb.com.br;
     root /caminho/lowticket-saas/public;
     index index.php;
 

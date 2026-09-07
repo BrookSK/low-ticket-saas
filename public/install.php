@@ -88,7 +88,7 @@ if ($action === 'install') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instalador - LowTicket SaaS</title>
+    <title>Instalador - Meu Orçamento</title>
     <style>
         body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;margin:0;padding:2rem}
         .box{max-width:640px;margin:0 auto;background:#1e293b;border-radius:14px;padding:2rem;box-shadow:0 20px 40px rgba(0,0,0,.4)}
@@ -106,7 +106,7 @@ if ($action === 'install') {
 </head>
 <body>
 <div class="box">
-    <h1>Instalador — LowTicket SaaS</h1>
+    <h1>Instalador — Meu Orçamento</h1>
 
     <?php if ($error): ?>
         <div class="err"><strong>Erro:</strong> <?= h($error) ?><br><br>

@@ -719,8 +719,8 @@ INSERT IGNORE INTO permissions (name, slug, created_at) VALUES
 -- Observacao: settings sensiveis serao criptografadas automaticamente quando
 -- voce salva-las pelo painel; aqui entram vazias e nao criptografadas.
 INSERT IGNORE INTO settings (`group`,`key`,`value`,`type`,`encrypted`,`is_public`,created_at,updated_at) VALUES
-('general','app.name','LowTicket SaaS','string',0,1,NOW(),NOW()),
-('general','app.url','','string',0,1,NOW(),NOW()),
+('general','app.name','Meu Orçamento','string',0,1,NOW(),NOW()),
+('general','app.url','https://meuorcamento.lrvweb.com.br','string',0,1,NOW(),NOW()),
 ('general','app.currency','BRL','string',0,1,NOW(),NOW()),
 ('general','app.timezone','America/Sao_Paulo','string',0,0,NOW(),NOW()),
 ('general','app.logo','','string',0,1,NOW(),NOW()),
@@ -742,7 +742,7 @@ INSERT IGNORE INTO settings (`group`,`key`,`value`,`type`,`encrypted`,`is_public
 ('mail','mail.password','','string',0,0,NOW(),NOW()),
 ('mail','mail.encryption','tls','string',0,0,NOW(),NOW()),
 ('mail','mail.from_address','','string',0,0,NOW(),NOW()),
-('mail','mail.from_name','LowTicket SaaS','string',0,0,NOW(),NOW()),
+('mail','mail.from_name','Meu Orçamento','string',0,0,NOW(),NOW()),
 ('whatsapp','whatsapp.provider','','string',0,0,NOW(),NOW()),
 ('whatsapp','whatsapp.token','','string',0,0,NOW(),NOW()),
 ('whatsapp','whatsapp.phone_number','','string',0,0,NOW(),NOW()),
@@ -770,16 +770,16 @@ INSERT IGNORE INTO settings (`group`,`key`,`value`,`type`,`encrypted`,`is_public
 
 -- Produtos comerciais
 INSERT IGNORE INTO products (name, slug, description, price, promo_price, type, grants_access, features, is_active, sort_order, created_at, updated_at) VALUES
-('Gerador de Orcamentos','gerador-orcamentos','Crie orcamentos profissionais em minutos, gere PDF e envie pelo WhatsApp.',19.90,NULL,'one_time','orcamentos,clientes,servicos','["Orcamentos ilimitados","PDF profissional","Link publico","Envio por WhatsApp"]',1,1,NOW(),NOW()),
-('Kit Financeiro + Precificador','kit-financeiro','Controle receitas e despesas e descubra quanto cobrar pelos seus servicos.',29.90,NULL,'one_time','financeiro,precificador','["Controle financeiro","Dashboard","Precificador inteligente","Relatorios"]',1,2,NOW(),NOW()),
-('Plano Completo','plano-completo','Tudo em um so lugar: orcamentos, financeiro, precificador, clientes e relatorios.',39.90,NULL,'bundle','orcamentos,financeiro,precificador,clientes,servicos,relatorios','["Todos os recursos","Relatorios completos","Suporte prioritario"]',1,3,NOW(),NOW());
+('Gerador de Orcamentos','gerador-orcamentos','Crie orcamentos profissionais em 2 minutos, gere PDF com a sua marca e envie pelo WhatsApp. Acompanhe quando o cliente visualiza e aprova.',39.90,19.90,'one_time','orcamentos,clientes,servicos','["Orcamentos ilimitados","PDF profissional com a sua marca","Link publico com aprovar/recusar","Envio em 1 clique pelo WhatsApp","Status em tempo real (enviado, visto, aprovado)","Cadastro de clientes e servicos reutilizaveis"]',1,1,NOW(),NOW()),
+('Kit Financeiro + Precificador','kit-financeiro','Saiba exatamente quanto cobrar e para onde vai o seu dinheiro. Controle receitas, despesas e descubra o preco ideal dos seus servicos.',49.90,29.90,'one_time','financeiro,precificador','["Precificador inteligente (preco minimo e ideal)","Controle de receitas e despesas","Dashboard com lucro real do mes","Alertas de contas a receber e a pagar","Comparativo mes a mes"]',1,2,NOW(),NOW()),
+('Plano Completo','plano-completo','A caixa de ferramentas completa do seu negocio: orcamentos, financeiro, precificador, clientes e relatorios num so lugar, com o melhor custo-beneficio.',89.80,39.90,'bundle','orcamentos,financeiro,precificador,clientes,servicos,relatorios','["Tudo do Gerador de Orcamentos","Tudo do Kit Financeiro + Precificador","Relatorios completos do negocio","Economize mais de 50% vs. comprar separado","Suporte prioritario"]',1,3,NOW(),NOW());
 
 -- Upsell: comprou Gerador de Orcamentos -> oferece Kit Financeiro
 INSERT IGNORE INTO upsells (trigger_product_id, offer_product_id, title, description, price, discount, sort_order, is_active, created_at, updated_at)
 SELECT tp.id, op.id,
-       'Controle tambem suas financas e descubra quanto cobrar',
-       'Adicione o Kit Financeiro + Precificador com condicao especial agora.',
-       29.90, 0, 1, 1, NOW(), NOW()
+       'Leve tambem o Kit Financeiro + Precificador com 33% OFF',
+       'Voce ja monta orcamentos como um profissional. Agora descubra o preco ideal de cada servico e controle seu dinheiro sem planilha. So nesta tela: de R$ 29,90 por R$ 19,90 (pagamento unico).',
+       19.90, 10.00, 1, 1, NOW(), NOW()
 FROM products tp, products op
 WHERE tp.slug = 'gerador-orcamentos' AND op.slug = 'kit-financeiro'
 AND NOT EXISTS (SELECT 1 FROM upsells u WHERE u.trigger_product_id = tp.id AND u.offer_product_id = op.id);
@@ -803,26 +803,26 @@ INSERT IGNORE INTO categories (user_id, name, type, created_at) VALUES
 
 -- Templates de e-mail
 INSERT IGNORE INTO email_templates (slug, name, subject, body, is_active, created_at, updated_at) VALUES
-('welcome','Boas-vindas','Bem-vindo(a) ao {{app_name}}!','<p>Ola {{name}},</p><p>Sua conta foi criada com sucesso. Comece agora a criar orcamentos profissionais.</p><p><a href="{{dashboard_url}}">Acessar minha conta</a></p>',1,NOW(),NOW()),
-('email_confirmation','Confirmacao de e-mail','Confirme seu e-mail','<p>Ola {{name}},</p><p>Confirme seu e-mail clicando no link abaixo:</p><p><a href="{{confirm_url}}">Confirmar e-mail</a></p>',1,NOW(),NOW()),
-('password_reset','Recuperacao de senha','Redefinicao de senha','<p>Ola {{name}},</p><p>Recebemos um pedido para redefinir sua senha. Use o link abaixo (valido por 1 hora):</p><p><a href="{{reset_url}}">Redefinir senha</a></p><p>Se nao foi voce, ignore este e-mail.</p>',1,NOW(),NOW()),
-('purchase_approved','Compra aprovada','Pagamento aprovado - {{app_name}}','<p>Ola {{name}},</p><p>Seu pagamento foi aprovado! Seu acesso ja esta liberado.</p><p><a href="{{dashboard_url}}">Acessar agora</a></p>',1,NOW(),NOW()),
-('payment_failed','Pagamento recusado','Nao conseguimos aprovar seu pagamento','<p>Ola {{name}},</p><p>Seu pagamento nao foi aprovado. Voce pode tentar novamente:</p><p><a href="{{checkout_url}}">Tentar novamente</a></p>',1,NOW(),NOW()),
-('quote_sent','Orcamento enviado','Voce recebeu um orcamento','<p>Ola {{customer_name}},</p><p>Voce recebeu um orcamento no valor de {{quote_total}}.</p><p><a href="{{quote_url}}">Ver orcamento</a></p>',1,NOW(),NOW()),
-('quote_approved','Orcamento aprovado','Seu orcamento foi aprovado','<p>Ola {{name}},</p><p>O orcamento {{quote_number}} foi aprovado pelo cliente.</p>',1,NOW(),NOW()),
-('quote_refused','Orcamento recusado','Seu orcamento foi recusado','<p>Ola {{name}},</p><p>O orcamento {{quote_number}} foi recusado pelo cliente.</p>',1,NOW(),NOW()),
-('upsell','Oferta especial','Uma oferta especial para voce','<p>Ola {{name}},</p><p>{{upsell_title}}</p><p><a href="{{upsell_url}}">Ver oferta</a></p>',1,NOW(),NOW()),
-('reminder','Lembrete','Voce tem algo pendente','<p>Ola {{name}},</p><p>{{reminder_body}}</p>',1,NOW(),NOW()),
-('contact','Contato','Nova mensagem de contato','<p>De: {{from_name}} ({{from_email}})</p><p>{{message}}</p>',1,NOW(),NOW());
+('welcome','Boas-vindas','Bem-vindo(a) ao {{app_name}}! 🎉','<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Bem-vindo(a), {{name}}! 👋</h2><p>Que bom ter você aqui. A partir de agora, criar orçamentos profissionais, descobrir o preço certo de cobrar e organizar suas finanças vai ficar muito mais simples.</p><p><strong>Seu primeiro passo:</strong> crie um orçamento em menos de 2 minutos e envie pelo WhatsApp.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#6366f1"><a href="{{dashboard_url}}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;border-radius:10px">Acessar meu painel</a></td></tr></table><p>Qualquer dúvida, é só responder este e-mail. Estamos por aqui. 🙂</p>',1,NOW(),NOW()),
+('email_confirmation','Confirmação de e-mail','Confirme seu e-mail no {{app_name}}','<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Falta só um passo, {{name}}</h2><p>Confirme seu e-mail para deixar sua conta 100% ativa e segura.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#6366f1"><a href="{{confirm_url}}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;border-radius:10px">Confirmar meu e-mail</a></td></tr></table><p style="color:#94a3b8;font-size:13px;margin-top:24px">Se você não criou uma conta no {{app_name}}, pode ignorar este e-mail com segurança.</p>',1,NOW(),NOW()),
+('password_reset','Recuperação de senha','Redefinição de senha — {{app_name}}','<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Vamos redefinir sua senha</h2><p>Olá {{name}}, recebemos um pedido para redefinir a senha da sua conta. Clique no botão abaixo para criar uma nova senha:</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#6366f1"><a href="{{reset_url}}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;border-radius:10px">Criar nova senha</a></td></tr></table><p style="color:#94a3b8;font-size:13px;margin-top:24px">Este link expira em 1 hora. Se não foi você que solicitou, ignore este e-mail — sua senha continua a mesma.</p>',1,NOW(),NOW()),
+('purchase_approved','Compra aprovada','✅ Pagamento aprovado — acesso liberado!','<h2 style="margin:0 0 12px;color:#16a34a;font-size:22px">Pagamento aprovado! 🎉</h2><p>Obrigado, {{name}}! Seu pagamento foi confirmado e seu acesso já está liberado. Aproveite todos os recursos agora mesmo.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#6366f1"><a href="{{dashboard_url}}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;border-radius:10px">Começar a usar agora</a></td></tr></table><p>Bom trabalho e boas vendas! 🚀</p>',1,NOW(),NOW()),
+('payment_failed','Pagamento recusado','Não conseguimos confirmar seu pagamento','<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Ops, algo deu errado no pagamento</h2><p>Olá {{name}}, não conseguimos confirmar seu pagamento. Isso costuma ser algo simples (limite, dados do cartão ou instabilidade). Você pode tentar de novo em segundos:</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#6366f1"><a href="{{checkout_url}}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;border-radius:10px">Tentar novamente</a></td></tr></table><p style="color:#94a3b8;font-size:13px;margin-top:24px">Nenhuma cobrança foi confirmada. Se precisar de ajuda, é só responder este e-mail.</p>',1,NOW(),NOW()),
+('quote_sent','Orçamento enviado (cliente)','Você recebeu um orçamento 📄','<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Olá {{customer_name}}, seu orçamento está pronto</h2><p>Preparamos um orçamento no valor de <strong style="color:#6366f1">{{quote_total}}</strong> para você. É rápido: abra, confira os detalhes e responda com um clique.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#6366f1"><a href="{{quote_url}}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;border-radius:10px">Ver meu orçamento</a></td></tr></table><p style="color:#94a3b8;font-size:13px;margin-top:24px">Você poderá aprovar ou recusar direto na página do orçamento.</p>',1,NOW(),NOW()),
+('quote_approved','Orçamento aprovado (prestador)','🎉 Orçamento {{quote_number}} aprovado!','<h2 style="margin:0 0 12px;color:#16a34a;font-size:22px">Boa notícia, {{name}}!</h2><p>O orçamento <strong>{{quote_number}}</strong> acabou de ser <strong>aprovado</strong> pelo cliente. 🙌</p><p>Que tal já registrar essa receita e agendar o serviço?</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#6366f1"><a href="{{dashboard_url}}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;border-radius:10px">Ir para o painel</a></td></tr></table>',1,NOW(),NOW()),
+('quote_refused','Orçamento recusado (prestador)','Orçamento {{quote_number}} foi recusado','<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Atualização do orçamento {{quote_number}}</h2><p>Olá {{name}}, o cliente recusou o orçamento <strong>{{quote_number}}</strong>. Acontece! Que tal revisar o valor ou as condições e reenviar uma nova proposta?</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#6366f1"><a href="{{dashboard_url}}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;border-radius:10px">Revisar e reenviar</a></td></tr></table>',1,NOW(),NOW()),
+('upsell','Oferta especial','🎁 Uma oferta especial pra você, {{name}}','<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">{{upsell_title}}</h2><p>Preparamos uma condição exclusiva para turbinar ainda mais o seu dia a dia. Dá uma olhada antes que expire:</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#6366f1"><a href="{{upsell_url}}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;border-radius:10px">Ver oferta especial</a></td></tr></table>',1,NOW(),NOW()),
+('reminder','Lembrete','🔔 Um lembrete do {{app_name}}','<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Olá {{name}}, passando pra lembrar</h2><p>{{reminder_body}}</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#6366f1"><a href="{{dashboard_url}}" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;border-radius:10px">Acessar o painel</a></td></tr></table>',1,NOW(),NOW()),
+('contact','Contato (interno)','📬 Nova mensagem de contato','<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Nova mensagem pelo site</h2><p><strong>De:</strong> {{from_name}} &lt;{{from_email}}&gt;</p><div style="background:#f8fafc;border-left:3px solid #6366f1;padding:12px 16px;border-radius:8px;margin-top:12px">{{message}}</div>',1,NOW(),NOW());
 
 -- Templates de WhatsApp
 INSERT IGNORE INTO whatsapp_templates (slug, name, body, is_active, created_at, updated_at) VALUES
-('quote_created','Orcamento criado','Ola {{customer_name}}! Preparei seu orcamento no valor de {{quote_total}}.',1,NOW(),NOW()),
-('quote_sent','Orcamento enviado','Ola {{customer_name}}! Seu orcamento no valor de {{quote_total}} esta disponivel: {{quote_url}}',1,NOW(),NOW()),
-('quote_approved','Orcamento aprovado','Otimas noticias! O orcamento {{quote_number}} foi aprovado.',1,NOW(),NOW()),
-('payment_approved','Pagamento aprovado','Ola {{name}}! Seu pagamento foi aprovado e o acesso liberado.',1,NOW(),NOW()),
-('checkout_recovery','Recuperacao de checkout','Ola {{name}}, notamos que voce nao concluiu sua compra. Finalize aqui: {{checkout_url}}',1,NOW(),NOW()),
-('reminder','Lembrete','Ola {{name}}, este e um lembrete: {{reminder_body}}',1,NOW(),NOW());
+('quote_created','Orcamento criado','Ola, {{customer_name}}! 👋\n\nPreparei um orcamento especialmente pra voce, no valor de *{{quote_total}}*.\n\nQualquer duvida, e so me chamar por aqui. 😉',1,NOW(),NOW()),
+('quote_sent','Orcamento enviado','Ola, {{customer_name}}! 📄\n\nSeu orcamento no valor de *{{quote_total}}* ja esta pronto. Da uma olhada e me avisa o que achou:\n\n👉 {{quote_url}}\n\nQualquer coisa, estou por aqui! 🙌',1,NOW(),NOW()),
+('quote_approved','Orcamento aprovado','Que otima noticia! 🎉\n\nO orcamento *{{quote_number}}* foi aprovado. Ja vou dar andamento. Obrigado pela confianca! 🤝',1,NOW(),NOW()),
+('payment_approved','Pagamento aprovado','Ola, {{name}}! ✅\n\nSeu pagamento foi *aprovado* e seu acesso ja esta liberado. Bom trabalho e boas vendas! 🚀',1,NOW(),NOW()),
+('checkout_recovery','Recuperacao de checkout','Oi, {{name}}! 👀\n\nVi que voce comecou sua compra mas nao finalizou. Ta a um passo de destravar tudo!\n\nFinalize aqui em 1 minuto: 👉 {{checkout_url}}\n\nSe precisar de ajuda, e so responder. 🙂',1,NOW(),NOW()),
+('reminder','Lembrete','Oi, {{name}}! 🔔\n\nSo passando pra lembrar: {{reminder_body}}',1,NOW(),NOW());
 
 -- =============================================================================
 -- SUPER ADMIN

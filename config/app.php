@@ -13,7 +13,7 @@
 
 return [
     // Nome padrao (pode ser sobrescrito por setting('app.name')).
-    'name' => 'LowTicket SaaS',
+    'name' => 'Meu Orçamento',
 
     // Deixe vazio para derivar automaticamente do host. Pode ser definido no painel.
     'url' => '',

@@ -65,8 +65,8 @@ foreach ($permissions as $p) {
  |------------------------------------------------------------------------ */
 $defaultSettings = [
     // Geral
-    ['app.name', 'LowTicket SaaS', 'string', false, 'general', true],
-    ['app.url', '', 'string', false, 'general', true],
+    ['app.name', 'Meu Orçamento', 'string', false, 'general', true],
+    ['app.url', 'https://meuorcamento.lrvweb.com.br', 'string', false, 'general', true],
     ['app.currency', 'BRL', 'string', false, 'general', true],
     ['app.timezone', 'America/Sao_Paulo', 'string', false, 'general', false],
     ['app.logo', '', 'string', false, 'general', true],
@@ -92,7 +92,7 @@ $defaultSettings = [
     ['mail.password', '', 'string', true, 'mail', false],
     ['mail.encryption', 'tls', 'string', false, 'mail', false],
     ['mail.from_address', '', 'string', false, 'mail', false],
-    ['mail.from_name', 'LowTicket SaaS', 'string', false, 'mail', false],
+    ['mail.from_name', 'Meu Orçamento', 'string', false, 'mail', false],
 
     // WhatsApp
     ['whatsapp.provider', '', 'string', false, 'whatsapp', false],
@@ -145,34 +145,53 @@ $products = [
     [
         'name' => 'Gerador de Orcamentos',
         'slug' => 'gerador-orcamentos',
-        'description' => 'Crie orcamentos profissionais em minutos, gere PDF e envie pelo WhatsApp.',
-        'price' => 19.90,
-        'promo_price' => null,
+        'description' => 'Crie orcamentos profissionais em 2 minutos, gere PDF com a sua marca e envie pelo WhatsApp. Acompanhe quando o cliente visualiza e aprova.',
+        'price' => 39.90,
+        'promo_price' => 19.90,
         'type' => 'one_time',
         'grants_access' => 'orcamentos,clientes,servicos',
-        'features' => json_encode(['Orcamentos ilimitados', 'PDF profissional', 'Link publico', 'Envio por WhatsApp'], JSON_UNESCAPED_UNICODE),
+        'features' => json_encode([
+            'Orcamentos ilimitados',
+            'PDF profissional com a sua marca',
+            'Link publico com aprovar/recusar',
+            'Envio em 1 clique pelo WhatsApp',
+            'Status em tempo real (enviado, visto, aprovado)',
+            'Cadastro de clientes e servicos reutilizaveis',
+        ], JSON_UNESCAPED_UNICODE),
         'sort_order' => 1,
     ],
     [
         'name' => 'Kit Financeiro + Precificador',
         'slug' => 'kit-financeiro',
-        'description' => 'Controle receitas e despesas e descubra quanto cobrar pelos seus servicos.',
-        'price' => 29.90,
-        'promo_price' => null,
+        'description' => 'Saiba exatamente quanto cobrar e para onde vai o seu dinheiro. Controle receitas, despesas e descubra o preco ideal dos seus servicos.',
+        'price' => 49.90,
+        'promo_price' => 29.90,
         'type' => 'one_time',
         'grants_access' => 'financeiro,precificador',
-        'features' => json_encode(['Controle financeiro', 'Dashboard', 'Precificador inteligente', 'Relatorios'], JSON_UNESCAPED_UNICODE),
+        'features' => json_encode([
+            'Precificador inteligente (preco minimo e ideal)',
+            'Controle de receitas e despesas',
+            'Dashboard com lucro real do mes',
+            'Alertas de contas a receber e a pagar',
+            'Comparativo mes a mes',
+        ], JSON_UNESCAPED_UNICODE),
         'sort_order' => 2,
     ],
     [
         'name' => 'Plano Completo',
         'slug' => 'plano-completo',
-        'description' => 'Tudo em um so lugar: orcamentos, financeiro, precificador, clientes e relatorios.',
-        'price' => 39.90,
-        'promo_price' => null,
+        'description' => 'A caixa de ferramentas completa do seu negocio: orcamentos, financeiro, precificador, clientes e relatorios num so lugar, com o melhor custo-beneficio.',
+        'price' => 89.80,
+        'promo_price' => 39.90,
         'type' => 'bundle',
         'grants_access' => 'orcamentos,financeiro,precificador,clientes,servicos,relatorios',
-        'features' => json_encode(['Todos os recursos', 'Relatorios completos', 'Suporte prioritario'], JSON_UNESCAPED_UNICODE),
+        'features' => json_encode([
+            'Tudo do Gerador de Orcamentos',
+            'Tudo do Kit Financeiro + Precificador',
+            'Relatorios completos do negocio',
+            'Economize mais de 50% vs. comprar separado',
+            'Suporte prioritario',
+        ], JSON_UNESCAPED_UNICODE),
         'sort_order' => 3,
     ],
 ];
@@ -208,9 +227,9 @@ if (isset($productIds['gerador-orcamentos'], $productIds['kit-financeiro'])) {
              VALUES (?,?,?,?,?,?,?,1,?,?)',
             [
                 $productIds['gerador-orcamentos'], $productIds['kit-financeiro'],
-                'Controle tambem suas financas e descubra quanto cobrar',
-                'Adicione o Kit Financeiro + Precificador com condicao especial agora.',
-                29.90, 0, 1, now(), now(),
+                'Leve tambem o Kit Financeiro + Precificador com 33% OFF',
+                'Voce ja monta orcamentos como um profissional. Agora descubra o preco ideal de cada servico e controle seu dinheiro sem planilha. So nesta tela: de R$ 29,90 por R$ 19,90 (pagamento unico).',
+                19.90, 10.00, 1, now(), now(),
             ]
         );
         echo "  upsell configurado\n";
@@ -236,18 +255,72 @@ echo "  planos aplicados\n";
 /* -------------------------------------------------------------------------
  | Templates de e-mail
  |------------------------------------------------------------------------ */
+$btn = fn(string $url, string $label) => '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0"><tr><td style="border-radius:10px;background:#6366f1"><a href="' . $url . '" style="display:inline-block;padding:13px 28px;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;border-radius:10px">' . $label . '</a></td></tr></table>';
+$muted = fn(string $t) => '<p style="color:#94a3b8;font-size:13px;margin-top:24px">' . $t . '</p>';
+
 $emailTemplates = [
-    ['welcome', 'Boas-vindas', 'Bem-vindo(a) ao {{app_name}}!', "<p>Ola {{name}},</p><p>Sua conta foi criada com sucesso. Comece agora a criar orcamentos profissionais.</p><p><a href=\"{{dashboard_url}}\">Acessar minha conta</a></p>"],
-    ['email_confirmation', 'Confirmacao de e-mail', 'Confirme seu e-mail', "<p>Ola {{name}},</p><p>Confirme seu e-mail clicando no link abaixo:</p><p><a href=\"{{confirm_url}}\">Confirmar e-mail</a></p>"],
-    ['password_reset', 'Recuperacao de senha', 'Redefinicao de senha', "<p>Ola {{name}},</p><p>Recebemos um pedido para redefinir sua senha. Use o link abaixo (valido por 1 hora):</p><p><a href=\"{{reset_url}}\">Redefinir senha</a></p><p>Se nao foi voce, ignore este e-mail.</p>"],
-    ['purchase_approved', 'Compra aprovada', 'Pagamento aprovado - {{app_name}}', "<p>Ola {{name}},</p><p>Seu pagamento foi aprovado! Seu acesso ja esta liberado.</p><p><a href=\"{{dashboard_url}}\">Acessar agora</a></p>"],
-    ['payment_failed', 'Pagamento recusado', 'Nao conseguimos aprovar seu pagamento', "<p>Ola {{name}},</p><p>Seu pagamento nao foi aprovado. Voce pode tentar novamente:</p><p><a href=\"{{checkout_url}}\">Tentar novamente</a></p>"],
-    ['quote_sent', 'Orcamento enviado', 'Voce recebeu um orcamento', "<p>Ola {{customer_name}},</p><p>Voce recebeu um orcamento no valor de {{quote_total}}.</p><p><a href=\"{{quote_url}}\">Ver orcamento</a></p>"],
-    ['quote_approved', 'Orcamento aprovado', 'Seu orcamento foi aprovado', "<p>Ola {{name}},</p><p>O orcamento {{quote_number}} foi aprovado pelo cliente.</p>"],
-    ['quote_refused', 'Orcamento recusado', 'Seu orcamento foi recusado', "<p>Ola {{name}},</p><p>O orcamento {{quote_number}} foi recusado pelo cliente.</p>"],
-    ['upsell', 'Oferta especial', 'Uma oferta especial para voce', "<p>Ola {{name}},</p><p>{{upsell_title}}</p><p><a href=\"{{upsell_url}}\">Ver oferta</a></p>"],
-    ['reminder', 'Lembrete', 'Voce tem algo pendente', "<p>Ola {{name}},</p><p>{{reminder_body}}</p>"],
-    ['contact', 'Contato', 'Nova mensagem de contato', "<p>De: {{from_name}} ({{from_email}})</p><p>{{message}}</p>"],
+    ['welcome', 'Boas-vindas', 'Bem-vindo(a) ao {{app_name}}! 🎉',
+        '<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Bem-vindo(a), {{name}}! 👋</h2>'
+        . '<p>Que bom ter você aqui. A partir de agora, criar orçamentos profissionais, descobrir o preço certo de cobrar e organizar suas finanças vai ficar muito mais simples.</p>'
+        . '<p><strong>Seu primeiro passo:</strong> crie um orçamento em menos de 2 minutos e envie pelo WhatsApp.</p>'
+        . $btn('{{dashboard_url}}', 'Acessar meu painel')
+        . '<p>Qualquer dúvida, é só responder este e-mail. Estamos por aqui. 🙂</p>'],
+
+    ['email_confirmation', 'Confirmação de e-mail', 'Confirme seu e-mail no {{app_name}}',
+        '<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Falta só um passo, {{name}}</h2>'
+        . '<p>Confirme seu e-mail para deixar sua conta 100% ativa e segura.</p>'
+        . $btn('{{confirm_url}}', 'Confirmar meu e-mail')
+        . $muted('Se você não criou uma conta no {{app_name}}, pode ignorar este e-mail com segurança.')],
+
+    ['password_reset', 'Recuperação de senha', 'Redefinição de senha — {{app_name}}',
+        '<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Vamos redefinir sua senha</h2>'
+        . '<p>Olá {{name}}, recebemos um pedido para redefinir a senha da sua conta. Clique no botão abaixo para criar uma nova senha:</p>'
+        . $btn('{{reset_url}}', 'Criar nova senha')
+        . $muted('Este link expira em 1 hora. Se não foi você que solicitou, ignore este e-mail — sua senha continua a mesma.')],
+
+    ['purchase_approved', 'Compra aprovada', '✅ Pagamento aprovado — acesso liberado!',
+        '<h2 style="margin:0 0 12px;color:#16a34a;font-size:22px">Pagamento aprovado! 🎉</h2>'
+        . '<p>Obrigado, {{name}}! Seu pagamento foi confirmado e seu acesso já está liberado. Aproveite todos os recursos agora mesmo.</p>'
+        . $btn('{{dashboard_url}}', 'Começar a usar agora')
+        . '<p>Bom trabalho e boas vendas! 🚀</p>'],
+
+    ['payment_failed', 'Pagamento recusado', 'Não conseguimos confirmar seu pagamento',
+        '<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Ops, algo deu errado no pagamento</h2>'
+        . '<p>Olá {{name}}, não conseguimos confirmar seu pagamento. Isso costuma ser algo simples (limite, dados do cartão ou instabilidade). Você pode tentar de novo em segundos:</p>'
+        . $btn('{{checkout_url}}', 'Tentar novamente')
+        . $muted('Nenhuma cobrança foi confirmada. Se precisar de ajuda, é só responder este e-mail.')],
+
+    ['quote_sent', 'Orçamento enviado (cliente)', 'Você recebeu um orçamento 📄',
+        '<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Olá {{customer_name}}, seu orçamento está pronto</h2>'
+        . '<p>Preparamos um orçamento no valor de <strong style="color:#6366f1">{{quote_total}}</strong> para você. É rápido: abra, confira os detalhes e responda com um clique.</p>'
+        . $btn('{{quote_url}}', 'Ver meu orçamento')
+        . $muted('Você poderá aprovar ou recusar direto na página do orçamento.')],
+
+    ['quote_approved', 'Orçamento aprovado (prestador)', '🎉 Orçamento {{quote_number}} aprovado!',
+        '<h2 style="margin:0 0 12px;color:#16a34a;font-size:22px">Boa notícia, {{name}}!</h2>'
+        . '<p>O orçamento <strong>{{quote_number}}</strong> acabou de ser <strong>aprovado</strong> pelo cliente. 🙌</p>'
+        . '<p>Que tal já registrar essa receita e agendar o serviço?</p>'
+        . $btn('{{dashboard_url}}', 'Ir para o painel')],
+
+    ['quote_refused', 'Orçamento recusado (prestador)', 'Orçamento {{quote_number}} foi recusado',
+        '<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Atualização do orçamento {{quote_number}}</h2>'
+        . '<p>Olá {{name}}, o cliente recusou o orçamento <strong>{{quote_number}}</strong>. Acontece! Que tal revisar o valor ou as condições e reenviar uma nova proposta?</p>'
+        . $btn('{{dashboard_url}}', 'Revisar e reenviar')],
+
+    ['upsell', 'Oferta especial', '🎁 Uma oferta especial pra você, {{name}}',
+        '<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">{{upsell_title}}</h2>'
+        . '<p>Preparamos uma condição exclusiva para turbinar ainda mais o seu dia a dia. Dá uma olhada antes que expire:</p>'
+        . $btn('{{upsell_url}}', 'Ver oferta especial')],
+
+    ['reminder', 'Lembrete', '🔔 Um lembrete do {{app_name}}',
+        '<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Olá {{name}}, passando pra lembrar</h2>'
+        . '<p>{{reminder_body}}</p>'
+        . $btn('{{dashboard_url}}', 'Acessar o painel')],
+
+    ['contact', 'Contato (interno)', '📬 Nova mensagem de contato',
+        '<h2 style="margin:0 0 12px;color:#0f172a;font-size:22px">Nova mensagem pelo site</h2>'
+        . '<p><strong>De:</strong> {{from_name}} &lt;{{from_email}}&gt;</p>'
+        . '<div style="background:#f8fafc;border-left:3px solid #6366f1;padding:12px 16px;border-radius:8px;margin-top:12px">{{message}}</div>'],
 ];
 foreach ($emailTemplates as [$slug, $name, $subject, $body]) {
     if (!$db->selectOne('SELECT id FROM email_templates WHERE slug = ?', [$slug])) {
@@ -261,12 +334,12 @@ echo "  templates de e-mail aplicados\n";
  | Templates de WhatsApp
  |------------------------------------------------------------------------ */
 $waTemplates = [
-    ['quote_created', 'Orcamento criado', 'Ola {{customer_name}}! Preparei seu orcamento no valor de {{quote_total}}.'],
-    ['quote_sent', 'Orcamento enviado', 'Ola {{customer_name}}! Seu orcamento no valor de {{quote_total}} esta disponivel: {{quote_url}}'],
-    ['quote_approved', 'Orcamento aprovado', 'Otimas noticias! O orcamento {{quote_number}} foi aprovado.'],
-    ['payment_approved', 'Pagamento aprovado', 'Ola {{name}}! Seu pagamento foi aprovado e o acesso liberado.'],
-    ['checkout_recovery', 'Recuperacao de checkout', 'Ola {{name}}, notamos que voce nao concluiu sua compra. Finalize aqui: {{checkout_url}}'],
-    ['reminder', 'Lembrete', 'Ola {{name}}, este e um lembrete: {{reminder_body}}'],
+    ['quote_created', 'Orcamento criado', "Ola, {{customer_name}}! 👋\n\nPreparei um orcamento especialmente pra voce, no valor de *{{quote_total}}*.\n\nQualquer duvida, e so me chamar por aqui. 😉"],
+    ['quote_sent', 'Orcamento enviado', "Ola, {{customer_name}}! 📄\n\nSeu orcamento no valor de *{{quote_total}}* ja esta pronto. Da uma olhada e me avisa o que achou:\n\n👉 {{quote_url}}\n\nQualquer coisa, estou por aqui! 🙌"],
+    ['quote_approved', 'Orcamento aprovado', "Que otima noticia! 🎉\n\nO orcamento *{{quote_number}}* foi aprovado. Ja vou dar andamento. Obrigado pela confianca! 🤝"],
+    ['payment_approved', 'Pagamento aprovado', "Ola, {{name}}! ✅\n\nSeu pagamento foi *aprovado* e seu acesso ja esta liberado. Bom trabalho e boas vendas! 🚀"],
+    ['checkout_recovery', 'Recuperacao de checkout', "Oi, {{name}}! 👀\n\nVi que voce comecou sua compra mas nao finalizou. Ta a um passo de destravar tudo!\n\nFinalize aqui em 1 minuto: 👉 {{checkout_url}}\n\nSe precisar de ajuda, e so responder. 🙂"],
+    ['reminder', 'Lembrete', "Oi, {{name}}! 🔔\n\nSo passando pra lembrar: {{reminder_body}}"],
 ];
 foreach ($waTemplates as [$slug, $name, $body]) {
     if (!$db->selectOne('SELECT id FROM whatsapp_templates WHERE slug = ?', [$slug])) {

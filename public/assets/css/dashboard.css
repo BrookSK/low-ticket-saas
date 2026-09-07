@@ -11,6 +11,7 @@
 }
 .sidebar .brand { padding: 1.25rem 1.35rem; display: flex; align-items: center; gap: .6rem; font-weight: 800; color: #fff; font-size: 1.15rem; letter-spacing: -.02em; }
 .sidebar .brand .logo-mark { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--brand), var(--accent)); display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; }
+.sidebar .brand .brand-img { width: 30px; height: 30px; border-radius: 8px; }
 .sidebar nav { padding: .5rem .75rem; overflow-y: auto; flex: 1; }
 .sidebar .nav-group { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: #64748b; padding: 1rem .6rem .35rem; }
 .sidebar a.nav-link {

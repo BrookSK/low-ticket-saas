@@ -41,9 +41,68 @@ class MailService
 
         $vars = array_merge($this->defaultVars(), $vars);
         $subject = $this->interpolate($template['subject'], $vars);
-        $body = $this->interpolate($template['body'], $vars);
+        $inner = $this->interpolate($template['body'], $vars);
+
+        // Envolve o conteudo num layout de e-mail profissional (a menos que o
+        // template ja seja um documento HTML completo).
+        $body = str_contains(strtolower($inner), '<!doctype') || str_contains(strtolower($inner), '<html')
+            ? $inner
+            : $this->wrapHtml($subject, $inner, $vars);
 
         return $this->send($to, $subject, $body);
+    }
+
+    /**
+     * Layout HTML responsivo para e-mails (tabelas + estilos inline para
+     * maxima compatibilidade com clientes de e-mail). O conteudo dos templates
+     * fica no miolo; header, botao e rodape sao padronizados aqui.
+     */
+    protected function wrapHtml(string $title, string $innerHtml, array $vars): string
+    {
+        $appName = e($vars['app_name'] ?? 'Meu Orçamento');
+        $appUrl = $vars['app_url'] ?? url('/');
+        $year = date('Y');
+        $support = (string) $this->settings->get('app.support_email', '');
+        $logo = (string) $this->settings->get('app.logo', '');
+
+        $logoHtml = $logo !== ''
+            ? '<img src="' . e($logo) . '" alt="' . $appName . '" height="40" style="height:40px;display:inline-block">'
+            : '<span style="display:inline-block;font-size:22px;font-weight:800;color:#ffffff;letter-spacing:-.5px">' . $appName . '</span>';
+
+        $supportLine = $support !== ''
+            ? '<br>Precisa de ajuda? Fale com a gente: <a href="mailto:' . e($support) . '" style="color:#6366f1;text-decoration:none">' . e($support) . '</a>'
+            : '';
+
+        return <<<HTML
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{$title}</title></head>
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:24px 12px;">
+    <tr><td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(15,23,42,.08);">
+        <tr>
+          <td style="background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:26px 32px;text-align:center;">
+            <a href="{$appUrl}" style="text-decoration:none;">{$logoHtml}</a>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:32px;color:#334155;font-size:16px;line-height:1.65;">
+            {$innerHtml}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:20px 32px;background:#0f172a;color:#94a3b8;font-size:12px;line-height:1.6;text-align:center;">
+            © {$year} {$appName}. Todos os direitos reservados.{$supportLine}
+          </td>
+        </tr>
+      </table>
+      <p style="color:#94a3b8;font-size:11px;margin:16px 0 0;">Você recebeu este e-mail porque tem uma conta no {$appName}.</p>
+    </td></tr>
+  </table>
+</body>
+</html>
+HTML;
     }
 
     public function send(string $to, string $subject, string $htmlBody): bool
@@ -54,7 +113,7 @@ class MailService
         }
 
         $fromAddress = (string) $this->settings->get('mail.from_address');
-        $fromName = (string) $this->settings->get('mail.from_name', 'LowTicket SaaS');
+        $fromName = (string) $this->settings->get('mail.from_name', 'Meu Orçamento');
 
         // Usa PHPMailer se disponivel.
         if (class_exists(\PHPMailer\PHPMailer\PHPMailer::class)) {
@@ -107,8 +166,8 @@ class MailService
     protected function defaultVars(): array
     {
         return [
-            'app_name' => (string) $this->settings->get('app.name', 'LowTicket SaaS'),
-            'app_url' => rtrim((string) $this->settings->get('app.url', ''), '/'),
+            'app_name' => (string) $this->settings->get('app.name', 'Meu Orçamento'),
+            'app_url' => rtrim((string) $this->settings->get('app.url', ''), '/') ?: url('/'),
             'dashboard_url' => url('/dashboard'),
         ];
     }

@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($title ?? 'Acesso') ?> - <?= e(setting('app.name', 'LowTicket SaaS')) ?></title>
+    <title><?= e($title ?? 'Acesso') ?> - <?= e(setting('app.name', 'Meu Orçamento')) ?></title>
     <meta name="robots" content="noindex">
+    <link rel="icon" type="image/svg+xml" href="<?= url('favicon.svg') ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= url('assets/css/app.css') ?>">
@@ -20,7 +21,7 @@
 <body>
     <div class="auth-card">
         <a href="<?= url('/') ?>" class="auth-logo" style="text-decoration:none;display:block">
-            <span class="mark">L</span><?= e(setting('app.name', 'LowTicket')) ?>
+            <img src="<?= url('favicon.svg') ?>" alt="" style="width:40px;height:40px;vertical-align:middle;margin-right:.5rem;border-radius:10px"><?= e(setting('app.name', 'Meu Orçamento')) ?>
         </a>
         <div class="card">
             <div class="card-body">

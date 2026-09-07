@@ -85,7 +85,7 @@ $canRespond = in_array($quote['status'], ['sent','viewed'], true);
         <div class="alert alert-warning mt-3 text-center">Este orcamento foi recusado.</div>
     <?php endif; ?>
 
-    <p class="text-center text-muted text-sm mt-3">Gerado com <?= e(setting('app.name', 'LowTicket SaaS')) ?></p>
+    <p class="text-center text-muted text-sm mt-3">Gerado com <?= e(setting('app.name', 'Meu Orçamento')) ?></p>
 </div>
 </body>
 </html>

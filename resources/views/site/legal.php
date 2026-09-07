@@ -2,7 +2,7 @@
 /** @var \App\Core\View $this */
 /** @var string $heading */ /** @var string $type */
 $this->extend('layouts.site');
-$appName = setting('app.name', 'LowTicket SaaS');
+$appName = setting('app.name', 'Meu Orçamento');
 ?>
 <?php $this->start('content'); ?>
 <section class="section">
