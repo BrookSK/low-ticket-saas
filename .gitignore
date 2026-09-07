@@ -1,0 +1,24 @@
+# Dependencias
+/vendor/
+
+# Configuracao sensivel (mantenha fora do versionamento em producao)
+/config/database.php
+
+# Storage gerado em runtime
+/storage/logs/*
+/storage/pdfs/*
+/storage/cache/*
+/public/uploads/*
+!storage/logs/.gitkeep
+!storage/pdfs/.gitkeep
+!storage/cache/.gitkeep
+!public/uploads/.gitkeep
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+/.idea/
+/.vscode/

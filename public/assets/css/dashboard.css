@@ -1,0 +1,79 @@
+/* =============================================================================
+   Layout de painel (usuario e admin): sidebar + topbar responsivo
+   ========================================================================== */
+
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+    width: var(--sidebar-w); background: #0f172a; color: #cbd5e1;
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 40;
+    display: flex; flex-direction: column; transition: transform .25s ease;
+}
+.sidebar .brand { padding: 1.25rem 1.35rem; display: flex; align-items: center; gap: .6rem; font-weight: 800; color: #fff; font-size: 1.15rem; letter-spacing: -.02em; }
+.sidebar .brand .logo-mark { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--brand), var(--accent)); display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; }
+.sidebar nav { padding: .5rem .75rem; overflow-y: auto; flex: 1; }
+.sidebar .nav-group { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: #64748b; padding: 1rem .6rem .35rem; }
+.sidebar a.nav-link {
+    display: flex; align-items: center; gap: .7rem; padding: .62rem .7rem; border-radius: 10px;
+    color: #cbd5e1; font-size: .92rem; font-weight: 500; margin-bottom: .12rem; transition: background .12s, color .12s;
+}
+.sidebar a.nav-link:hover { background: #1e293b; color: #fff; text-decoration: none; }
+.sidebar a.nav-link.active { background: var(--brand); color: #fff; }
+.sidebar a.nav-link .ic { width: 18px; text-align: center; opacity: .9; }
+.sidebar .side-footer { padding: 1rem; border-top: 1px solid #1e293b; font-size: .82rem; }
+
+.main { flex: 1; margin-left: var(--sidebar-w); display: flex; flex-direction: column; min-width: 0; }
+
+.topbar {
+    height: 64px; background: #fff; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem;
+    position: sticky; top: 0; z-index: 30;
+}
+.topbar .page-title { font-weight: 700; font-size: 1.1rem; }
+.topbar .actions { display: flex; align-items: center; gap: .9rem; }
+.topbar .menu-toggle { display: none; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--ink-2); }
+
+.avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-700); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: .9rem; }
+
+.content { padding: 1.75rem 1.5rem; flex: 1; }
+
+/* Dropdown simples */
+.dropdown { position: relative; }
+.dropdown-menu { position: absolute; right: 0; top: calc(100% + 8px); background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); box-shadow: var(--shadow); min-width: 200px; padding: .4rem; display: none; z-index: 50; }
+.dropdown-menu.open { display: block; }
+.dropdown-menu a, .dropdown-menu button { display: block; width: 100%; text-align: left; padding: .55rem .75rem; border-radius: 8px; color: var(--ink-2); font-size: .9rem; background: none; border: none; cursor: pointer; }
+.dropdown-menu a:hover, .dropdown-menu button:hover { background: #f1f5f9; text-decoration: none; }
+
+/* Quick action cards */
+.quick-actions { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+.quick-action { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 1.25rem; text-align: center; transition: all .15s; color: var(--ink-2); }
+.quick-action:hover { border-color: var(--brand); box-shadow: var(--shadow); transform: translateY(-2px); text-decoration: none; color: var(--brand-700); }
+.quick-action .qa-icon { font-size: 1.6rem; margin-bottom: .5rem; }
+.quick-action .qa-label { font-weight: 600; font-size: .9rem; }
+
+/* Checklist onboarding */
+.checklist { list-style: none; padding: 0; margin: 0; }
+.checklist li { display: flex; align-items: center; gap: .75rem; padding: .7rem 0; border-bottom: 1px solid var(--line); }
+.checklist li:last-child { border-bottom: none; }
+.checklist .check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--line); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.checklist li.done .check { background: var(--success); border-color: var(--success); color: #fff; }
+.checklist li.done span.txt { color: var(--muted); text-decoration: line-through; }
+
+.progress-bar { height: 8px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+.progress-bar .fill { height: 100%; background: linear-gradient(90deg, var(--brand), var(--accent)); border-radius: 999px; transition: width .4s; }
+
+/* Sidebar backdrop mobile */
+.sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(15,23,42,.5); z-index: 39; }
+
+@media (max-width: 992px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .topbar .menu-toggle { display: block; }
+    .sidebar-backdrop.open { display: block; }
+    .quick-actions { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+    .content { padding: 1.25rem 1rem; }
+    .quick-actions { grid-template-columns: 1fr 1fr; }
+}
