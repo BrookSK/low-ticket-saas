@@ -15,7 +15,7 @@ $active = fn($prefix) => str_starts_with($path, $prefix) ? 'active' : '';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($title ?? 'Painel') ?> - <?= e(setting('app.name', 'Meu Orçamento')) ?></title>
     <meta name="robots" content="noindex">
-    <link rel="icon" type="image/svg+xml" href="<?= url('favicon.svg') ?>">
+    <link rel="icon" type="image/svg+xml" href="<?= url('assets/img/logo.svg') ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= url('assets/css/app.css') ?>">
     <link rel="stylesheet" href="<?= url('assets/css/dashboard.css') ?>">
@@ -25,7 +25,7 @@ $active = fn($prefix) => str_starts_with($path, $prefix) ? 'active' : '';
 <body>
 <div class="layout">
     <aside class="sidebar" id="sidebar">
-        <div class="brand"><img src="<?= url('favicon.svg') ?>" alt="" class="brand-img"> <?= e(setting('app.name', 'Meu Orçamento')) ?></div>
+        <div class="brand"><img src="<?= url('assets/img/logo.svg') ?>" alt="" class="brand-img"> <?= e(setting('app.name', 'Meu Orçamento')) ?></div>
         <nav>
             <a class="nav-link <?= $active('/dashboard') ?>" href="<?= url('/dashboard') ?>"><span class="ic">■</span> Dashboard</a>
 

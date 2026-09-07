@@ -5,10 +5,17 @@ $this->extend('layouts.site');
 $appName = setting('app.name', 'Meu Orçamento');
 ?>
 <?php $this->start('content'); ?>
-<section class="section">
-    <div class="container" style="max-width:760px">
+<section class="page-hero">
+    <div class="container">
+        <div class="kicker">Transparência</div>
         <h1><?= e($heading) ?></h1>
-        <p class="text-muted">Ultima atualizacao: <?= date('d/m/Y') ?></p>
+        <p>Escrito de forma clara, sem juridiquês desnecessário. Seus dados e sua confiança em primeiro lugar.</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container prose">
+        <span class="updated-badge">🕑 Última atualização: <?= date('d/m/Y') ?></span>
 
         <?php if ($type === 'terms'): ?>
             <h3>1. Aceitacao</h3>

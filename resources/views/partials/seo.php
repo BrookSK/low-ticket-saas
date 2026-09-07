@@ -6,12 +6,12 @@ $appName = setting('app.name', 'Meu Orçamento');
 $metaTitle = $title ?? $appName;
 $desc = $metaDescription ?? 'Crie orcamentos profissionais, descubra quanto cobrar e organize suas financas. Feito para quem presta servico.';
 $currentUrl = url(ltrim(app(\App\Core\Request::class)->path(), '/'));
-$ogImage = setting('app.logo', '') ?: url('favicon.svg');
+$ogImage = setting('app.logo', '') ?: url('assets/img/logo.svg');
 ?>
 <title><?= e($metaTitle) ?></title>
 <meta name="description" content="<?= e($desc) ?>">
-<link rel="icon" type="image/svg+xml" href="<?= url('favicon.svg') ?>">
-<link rel="apple-touch-icon" href="<?= url('favicon.svg') ?>">
+<link rel="icon" type="image/svg+xml" href="<?= url('assets/img/logo.svg') ?>">
+<link rel="apple-touch-icon" href="<?= url('assets/img/logo.svg') ?>">
 <meta name="theme-color" content="#6366f1">
 <link rel="canonical" href="<?= e($currentUrl) ?>">
 <meta property="og:type" content="website">

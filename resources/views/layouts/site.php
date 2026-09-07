@@ -17,7 +17,7 @@ $logged = $auth->check();
 <body class="site">
     <header class="site-header">
         <div class="container flex items-center justify-between" style="height:68px">
-            <a href="<?= url('/') ?>" class="site-logo"><img src="<?= url('favicon.svg') ?>" alt="" class="mark-img"> <?= e(setting('app.name', 'Meu Orçamento')) ?></a>
+            <a href="<?= url('/') ?>" class="site-logo"><img src="<?= url('assets/img/logo.svg') ?>" alt="" class="mark-img"> <?= e(setting('app.name', 'Meu Orçamento')) ?></a>
             <nav class="site-nav">
                 <a href="<?= url('/precos') ?>">Precos</a>
                 <a href="<?= url('/faq') ?>">Duvidas</a>
@@ -40,7 +40,7 @@ $logged = $auth->check();
         <div class="container">
             <div class="footer-grid">
                 <div>
-                    <div class="site-logo" style="color:#fff"><img src="<?= url('favicon.svg') ?>" alt="" class="mark-img"> <?= e(setting('app.name', 'Meu Orçamento')) ?></div>
+                    <div class="site-logo" style="color:#fff"><img src="<?= url('assets/img/logo.svg') ?>" alt="" class="mark-img"> <?= e(setting('app.name', 'Meu Orçamento')) ?></div>
                     <p class="text-sm" style="color:#94a3b8;margin-top:.75rem;max-width:280px">Orcamentos, financeiro e precificador para quem quer crescer sem complicacao.</p>
                 </div>
                 <div>

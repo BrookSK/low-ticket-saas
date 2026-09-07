@@ -1,15 +1,18 @@
 RewriteEngine On
 
-# Servir assets diretamente do /public
+# Servir assets/uploads diretamente do /public
 RewriteRule ^assets/(.*)$ public/assets/$1 [L]
 RewriteRule ^uploads/(.*)$ public/uploads/$1 [L]
-RewriteRule ^import\.png$ public/import.png [L]
-RewriteRule ^favicon\.ico$ public/favicon.ico [L]
 
-# Se o arquivo ou diretório existir na raiz, entrega direto
+# Servir arquivos estaticos da raiz publica (favicon, robots, imagens soltas)
+# Se o arquivo existir dentro de /public, serve de la.
+RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+RewriteRule ^(.+)$ public/$1 [L]
+
+# Se o arquivo ou diretorio existir na raiz, entrega direto
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# Caso contrário, envia tudo para o front controller em /public
+# Caso contrario, envia tudo para o front controller em /public
 RewriteRule ^ public/index.php [L]
