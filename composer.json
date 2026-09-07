@@ -9,7 +9,7 @@
         "ext-mbstring": "*",
         "ext-json": "*",
         "ext-openssl": "*",
-        "dompdf/dompdf": "^2.0",
+        "dompdf/dompdf": "^3.0",
         "phpmailer/phpmailer": "^6.9"
     },
     "require-dev": {
