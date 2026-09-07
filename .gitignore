@@ -2,7 +2,7 @@
 /vendor/
 
 # Configuracao sensivel (mantenha fora do versionamento em producao)
-/config/database.php
+# /config/database.php
 
 # Storage gerado em runtime
 /storage/logs/*
