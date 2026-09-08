@@ -4,7 +4,7 @@
 /** @var string $checkoutUrl */ /** @var ?string $campaign */
 $this->extend('layouts.site');
 $features = $product['features'] ? (array) json_decode($product['features'], true) : [];
-$icon = fn($n, $s = 24) => $this->partial('partials.icon', ['name' => $n, 'size' => $s]);
+$icon = fn($n, $s = 24) => $this->include('partials.icon', ['name' => $n, 'size' => $s]);
 ?>
 <?php $this->start('content'); ?>
 

@@ -91,6 +91,15 @@ class View
         return $this->sections[$name] ?? $default;
     }
 
+    /**
+     * Renderiza um partial e RETORNA a string (nao imprime).
+     * Util para compor HTML (ex.: repetir um icone).
+     */
+    public function include(string $template, array $data = []): string
+    {
+        return $this->renderTemplate($template, $data);
+    }
+
     public function partial(string $template, array $data = []): void
     {
         echo $this->renderTemplate($template, $data);
