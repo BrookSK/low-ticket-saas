@@ -6,7 +6,7 @@ $approved = $order['status'] === 'approved';
 ?>
 <?php $this->start('content'); ?>
 <div class="card"><div class="card-body text-center" style="padding:2.5rem">
-    <div style="font-size:3rem"><?= $approved ? '✅' : '⏳' ?></div>
+    <div class="result-icon <?= $approved ? 'ok' : 'pending' ?>"><?php $this->partial('partials.icon', ['name' => $approved ? 'check-circle' : 'clock', 'size' => 30]); ?></div>
     <h1 style="font-size:1.5rem"><?= $approved ? 'Pagamento aprovado!' : 'Recebemos seu pedido' ?></h1>
     <p class="text-muted">
         <?= $approved

@@ -31,22 +31,22 @@ $wa = preg_replace('/\D+/', '', (string) setting('whatsapp.phone_number', ''));
             <div class="contact-cards">
                 <?php if ($support): ?>
                 <div class="contact-card">
-                    <div class="ic">✉️</div>
+                    <div class="ic"><?php $this->partial('partials.icon', ['name' => 'mail']); ?></div>
                     <div><h4>E-mail</h4><p><a href="mailto:<?= e($support) ?>"><?= e($support) ?></a></p></div>
                 </div>
                 <?php endif; ?>
                 <?php if ($wa): ?>
                 <div class="contact-card">
-                    <div class="ic">💬</div>
+                    <div class="ic"><?php $this->partial('partials.icon', ['name' => 'message-circle']); ?></div>
                     <div><h4>WhatsApp</h4><p><a href="https://wa.me/<?= e($wa) ?>" target="_blank">Chamar no WhatsApp</a></p></div>
                 </div>
                 <?php endif; ?>
                 <div class="contact-card">
-                    <div class="ic">⚡</div>
+                    <div class="ic"><?php $this->partial('partials.icon', ['name' => 'zap']); ?></div>
                     <div><h4>Resposta rápida</h4><p>Costumamos responder em poucas horas nos dias úteis.</p></div>
                 </div>
                 <div class="contact-card">
-                    <div class="ic">📚</div>
+                    <div class="ic"><?php $this->partial('partials.icon', ['name' => 'headphones']); ?></div>
                     <div><h4>Central de dúvidas</h4><p><a href="<?= url('/faq') ?>">Ver perguntas frequentes</a></p></div>
                 </div>
             </div>

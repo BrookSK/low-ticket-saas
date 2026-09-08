@@ -20,7 +20,7 @@ usort($products, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
             ?>
                 <div class="price-card <?= $featured ? 'featured' : '' ?>">
                     <?php $hasPromo = $p['promo_price'] && (float) $p['promo_price'] > 0 && (float) $p['promo_price'] < (float) $p['price']; ?>
-                    <?php if ($featured): ?><span class="tag">⭐ Mais escolhido</span><?php endif; ?>
+                    <?php if ($featured): ?><span class="tag">Mais escolhido</span><?php endif; ?>
                     <h3><?= e($p['name']) ?></h3>
                     <?php if ($hasPromo): ?><div class="old-price">de R$ <?= number_format((float) $p['price'], 2, ',', '.') ?></div><?php endif; ?>
                     <div class="price"><small>R$</small> <?= number_format((float) $price, 2, ',', '.') ?></div>
@@ -32,7 +32,7 @@ usort($products, fn($a, $b) => $a['sort_order'] <=> $b['sort_order']);
             <?php endforeach; ?>
         </div>
         <div class="guarantee">
-            <div class="g-ico">🛡️</div>
+            <div class="g-ico"><?php $this->partial('partials.icon', ['name' => 'shield', 'size' => 28]); ?></div>
             <div><strong>Risco zero.</strong> Comece grátis e pague só quando quiser mais recursos. Seus dados são seus — exporte ou exclua quando quiser.</div>
         </div>
     </div>

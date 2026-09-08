@@ -33,6 +33,10 @@ $router->group(['middleware' => ['tracking']], function ($router) {
     $router->get('/orcamento', LandingController::class . '@campaign')->name('campaign.generic');
     $router->get('/orcamento-{nicho}', LandingController::class . '@campaign')->name('campaign.niche');
 
+    // Paginas de venda dedicadas por produto (para trafego pago segmentado).
+    $router->get('/precificador-de-servicos', LandingController::class . '@pricingPage')->name('sales.pricing');
+    $router->get('/controle-financeiro', LandingController::class . '@financePage')->name('sales.finance');
+
     $router->get('/precos', PageController::class . '@pricing')->name('pricing');
     $router->get('/faq', PageController::class . '@faq')->name('faq');
     $router->get('/contato', PageController::class . '@contact')->name('contact');

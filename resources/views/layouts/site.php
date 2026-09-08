@@ -19,16 +19,17 @@ $logged = $auth->check();
         <div class="container flex items-center justify-between" style="height:68px">
             <a href="<?= url('/') ?>" class="site-logo"><img src="<?= url('assets/img/logo.svg') ?>" alt="" class="mark-img"> <?= e(setting('app.name', 'Meu Orçamento')) ?></a>
             <nav class="site-nav">
-                <a href="<?= url('/precos') ?>">Precos</a>
+                <a href="<?= url('/') ?>">Orcamentos</a>
+                <a href="<?= url('/precificador-de-servicos') ?>">Precificador</a>
+                <a href="<?= url('/controle-financeiro') ?>">Financeiro</a>
                 <a href="<?= url('/faq') ?>">Duvidas</a>
-                <a href="<?= url('/contato') ?>">Contato</a>
             </nav>
             <div class="flex items-center gap-1">
                 <?php if ($logged): ?>
                     <a class="btn btn-primary btn-sm" href="<?= url('/dashboard') ?>">Meu painel</a>
                 <?php else: ?>
                     <a class="btn btn-ghost btn-sm" href="<?= url('/login') ?>">Entrar</a>
-                    <a class="btn btn-primary btn-sm" href="<?= url('/cadastro') ?>">Comecar agora</a>
+                    <a class="btn btn-primary btn-sm" href="<?= url('/cadastro') ?>">Criar conta</a>
                 <?php endif; ?>
             </div>
         </div>

@@ -15,7 +15,7 @@ $appName = setting('app.name', 'Meu Orçamento');
 
 <section class="section">
     <div class="container prose">
-        <span class="updated-badge">🕑 Última atualização: <?= date('d/m/Y') ?></span>
+        <span class="updated-badge"><?php $this->partial('partials.icon', ['name' => 'clock', 'size' => 14]); ?> Última atualização: <?= date('d/m/Y') ?></span>
 
         <?php if ($type === 'terms'): ?>
             <h3>1. Aceitacao</h3>
